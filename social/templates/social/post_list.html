@@ -1,0 +1,212 @@
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-5 col-sm-12">
+                <h5>Add a Post!</h5>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-3 mb-5">
+            <div class="col-md-5 col-sm-12">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success mt-3">Submit!</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="d-flex flex-column align-items-center">
+            {% for post in post_data %}
+            <div class="card shadow-sm col-md-5 mt-3 d-flex align-items-center justify-content-center">
+                    <div style="width: 90%; height: 200px; margin: 1rem; overflow: hidden; position: relative;">
+
+                        {% if post.0 %}
+
+                            {% if post.1.author == user %}
+
+                                <div class="d-flex flex-row align-items-center justify-content-between" style="width: 100%;">
+                                    <div class="d-flex flex-row align-items-center gap-3">
+                                        <a href="{% url 'profile' post.1.author.pk %}"><img class="rounded-circle" height='30' width="30" src="{{ post.1.author.profile.picture.url }}" /></a>
+                                        <a class="profile-link" href="{% url 'profile' post.1.author.pk %}">{{ post.1.author }}</a> 
+                                    </div>
+                                </div>
+
+                                <div class="post_body_div">
+                                    {{ post.1.body|safe }}
+                                    <a class="stretched-link" href="{% url 'post-detail' post.1.pk %}"></a>
+                                </div>
+
+                                <div class="d-flex flex-row">
+                                    <form method="POST" action="{% url 'like' post.1.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <button class="remove-default-btn" type="submit">
+                                            <i class="far fa-thumbs-up">
+                                                <span>
+                                                    {{ post.1.likes.all.count }}
+                                                </span>
+                                            </i>
+                                        </button>
+                                    </form>
+            
+                                    <form method="POST" action="{% url 'dislike' post.1.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <button class="remove-default-btn" type="submit">
+                                            <i class="far fa-thumbs-down">
+                                                <span>
+                                                    {{ post.1.dislikes.all.count }}
+                                                </span>
+                                            </i>
+                                        </button>
+                                    </form>
+                                </div>
+
+                            {%else%}
+
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="width: 100%;">
+
+                                <div class="d-flex flex-row align-items-center gap-3">
+                                    <a href="{% url 'profile' post.1.author.pk %}"><img class="rounded-circle" height='30' width="30" src="{{ post.1.author.profile.picture.url }}" /></a>
+                                    <a class="profile-link" href="{% url 'profile' post.1.author.pk %}">{{ post.1.author }}</a> 
+                                </div>
+
+                                <form method="post" action="{% url 'remove-follower-post' post.1.author.pk %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-light" type="submit" >Unfollow</button>
+                                </form>
+
+                            </div>
+                            
+                            <div class="post_body_div">
+                                {{ post.1.body|safe }}
+                                <a class="stretched-link" href="{% url 'post-detail' post.1.pk %}"></a>
+                            </div>
+
+                            <div class="d-flex flex-row">
+                                <form method="POST" action="{% url 'like' post.1.pk %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button class="remove-default-btn" type="submit">
+                                        <i class="far fa-thumbs-up">
+                                            <span>
+                                                {{ post.1.likes.all.count }}
+                                            </span>
+                                        </i>
+                                    </button>
+                                </form>
+        
+                                <form method="POST" action="{% url 'dislike' post.1.pk %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button class="remove-default-btn" type="submit">
+                                        <i class="far fa-thumbs-down">
+                                            <span>
+                                                {{ post.1.dislikes.all.count }}
+                                            </span>
+                                        </i>
+                                    </button>
+                                </form>
+                            </div>
+
+                            {%endif%}
+
+                        {% else %}
+
+                            {% if post.1.author == user %}
+
+                                <div class="d-flex flex-row align-items-center justify-content-between" style="width: 100%;">
+                                    <div class="d-flex flex-row align-items-center gap-3">
+                                        <a href="{% url 'profile' post.1.author.pk %}"><img class="rounded-circle" height='30' width="30" src="{{ post.1.author.profile.picture.url }}" /></a>
+                                        <a class="profile-link" href="{% url 'profile' post.1.author.pk %}">{{ post.1.author }}</a> 
+                                    </div>
+                                </div>
+
+                                <div class="post_body_div">
+                                    {{ post.1.body|safe }}
+                                    <a class="stretched-link" href="{% url 'post-detail' post.1.pk %}"></a>
+                                </div>
+                                <div class="d-flex flex-row">
+                                    <form method="POST" action="{% url 'like' post.1.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <button class="remove-default-btn" type="submit">
+                                            <i class="far fa-thumbs-up">
+                                                <span>
+                                                    {{ post.1.likes.all.count }}
+                                                </span>
+                                            </i>
+                                        </button>
+                                    </form>
+            
+                                    <form method="POST" action="{% url 'dislike' post.1.pk %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <button class="remove-default-btn" type="submit">
+                                            <i class="far fa-thumbs-down">
+                                                <span>
+                                                    {{ post.1.dislikes.all.count }}
+                                                </span>
+                                            </i>
+                                        </button>
+                                    </form>
+                                </div>
+
+                            {%else%}
+
+                            <div class="d-flex flex-row align-items-center justify-content-between" style="width: 100%;">
+
+                                <div class="d-flex flex-row align-items-center gap-3">
+                                    <a href="{% url 'profile' post.1.author.pk %}"><img class="rounded-circle" height='30' width="30" src="{{ post.1.author.profile.picture.url }}" /></a>
+                                    <a class="profile-link" href="{% url 'profile' post.1.author.pk %}">{{ post.1.author }}</a> 
+                                </div>
+
+                                <form method="post" action="{% url 'add-follower-post' post.1.author.pk %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-light" type="submit" >Follow</button>
+                                </form>
+                            </div>
+
+                            <div class="post_body_div">
+                                {{ post.1.body|safe }}
+                                <a class="stretched-link" href="{% url 'post-detail' post.1.pk %}"></a>
+                            </div>
+                            <div class="d-flex flex-row">
+                                <form method="POST" action="{% url 'like' post.1.pk %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button class="remove-default-btn" type="submit">
+                                        <i class="far fa-thumbs-up">
+                                            <span>
+                                                {{ post.1.likes.all.count }}
+                                            </span>
+                                        </i>
+                                    </button>
+                                </form>
+        
+                                <form method="POST" action="{% url 'dislike' post.1.pk %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button class="remove-default-btn" type="submit">
+                                        <i class="far fa-thumbs-down">
+                                            <span>
+                                                {{ post.1.dislikes.all.count }}
+                                            </span>
+                                        </i>
+                                    </button>
+                                </form>
+                            </div>
+                            {%endif%}
+
+                        {%endif%}
+
+                    </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+{% endblock content %}

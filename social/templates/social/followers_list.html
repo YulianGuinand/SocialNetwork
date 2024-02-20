@@ -1,0 +1,56 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+    <div class="mt-5 container d-flex justify-content-center align-items-center ">
+        <div class="card shadow p-3" style="width: 40%;" >
+            <div class="row mb-5 d-flex justify-content-start" style="width: 100%;">
+                <div class="d-flex align-items-center gap-3">
+                    <a href="{% url 'profile' profile.pk %}" class="btn btn-light">Back To Profile</a>
+                    <p class="location-text m-0">{{ profile.user.username }}</p>
+                </div>
+            </div>
+            <p>Tous les followers</p>
+        {% for follower_info in followers_info %}
+            <div class="d-flex flex-column justify-content-center ">
+                <div class="d-flex justify-content-between align-items-center" style="width: 100%;">
+                    <div class="d-flex align-items-center col-md-5 col-sm-12 position-relative my-3">
+                        <a href="{% url 'profile' follower_info.1.profile.pk %}"><img class="rounded-circle" height='50' width="50" src="{{ follower_info.1.profile.picture.url }}"/></a>
+                        <div class="ms-3 d-flex flex-column">
+                            <a href="{% url 'profile' follower_info.1.profile.pk %}"class=" profile-link" >{{ follower_info.1.username }}</a>
+                            {% if follower_info.1.profile.name %}
+                            <a href="{% url 'profile' follower_info.1.profile.pk %}" style="text-decoration: none; color: #333; font-weight: lighter;">{{ follower_info.1.profile.name }}</a>
+                            {%endif%}
+                        </div>
+                    </div>
+                    <div class="me-5">
+                        {%if follower_info.1 == user %}
+                        {%else%}
+                            {% if follower_info.0%}
+                                <form method="post" action="{% url 'remove-follower-list' follower_info.1.profile.pk profile.pk%}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-light" type="submit" >Unfollow</button>
+                                </form>
+                                
+                            {%else%}
+                                <form method="post" action="{% url 'add-follower-list' follower_info.1.profile.pk profile.pk %}">
+                                    {% csrf_token %}
+                                    <button class="btn btn-light" type="submit" >Follow</button>
+                                </form>
+                            {%endif%}
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+        {%endfor%}
+        </div>
+    
+    {% comment %} {{ follower.profile.name }} {% endcomment %}
+    
+    
+    
+    
+    
+    
+    </div>
+
+{%endblock content%}
